@@ -3,8 +3,12 @@ using BackEnd_Proveedores.Repository.Implementations;
 using BackEnd_Proveedores.Repository.Interfaces;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration; //app configuration
@@ -30,6 +34,41 @@ builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 //Map scoped services
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+//Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            System.Text.Encoding.ASCII.GetBytes(configuration.GetSection("AppSettings:Token").Value)),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+//Swagger authentication
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<SecurityRequirementsOperationFilter>();
+
+    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
+    {
+        Description = "Bearer token usage needed for authorization: \"bearer {token} \"",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+});
+
+//Cors
+builder.Services.AddCors();
+
+
 
 //*********************************************************************************************
 //APP BUILDING COMMANDS
@@ -45,7 +84,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.MapControllers();
 

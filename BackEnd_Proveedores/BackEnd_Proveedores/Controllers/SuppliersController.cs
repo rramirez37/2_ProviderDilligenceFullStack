@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BackEnd_Proveedores.Data;
+using BackEnd_Proveedores.Models;
+using BackEnd_Proveedores.Models.DTO;
+using BackEnd_Proveedores.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BackEnd_Proveedores.Data;
-using BackEnd_Proveedores.Models;
-using BackEnd_Proveedores.Repository.Interfaces;
-using BackEnd_Proveedores.Models.DTO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BackEnd_Proveedores.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SuppliersController : ControllerBase
     {
         private readonly ISupplierRepository _supplierRepository;
@@ -77,7 +79,6 @@ namespace BackEnd_Proveedores.Controllers
                 _apiResponse.Message = "Error while extracting supplier";
                 return StatusCode(500, _apiResponse);
             }
-            return NotFound();
         }
 
         // PUT: api/Suppliers/5

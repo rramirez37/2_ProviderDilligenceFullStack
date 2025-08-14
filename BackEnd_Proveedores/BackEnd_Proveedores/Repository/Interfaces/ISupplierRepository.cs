@@ -8,6 +8,8 @@ namespace BackEnd_Proveedores.Repository.Interfaces
         Task<SupplierDTO> GetSupplierByID(int id); //Get supplier by id
         Task<SupplierDTO> CreateSupplier(SupplierDTO supplier); //Create new supplier
         Task<SupplierDTO> UpdateSupplier(int id, SupplierDTO supplier); //Update existing supplier
-        Task<bool> DeleteSupplier(); //Delete selected supplier
+        Task<bool> DeleteSupplier(int id); //Delete selected supplier
+        Task<bool> DoesSupplierExistName(string name); //Check if a supplier with same legal name exists
+        Task <bool> DoesSupplierExistId(int id); //Check if a supplier with same id exists
     }
 }

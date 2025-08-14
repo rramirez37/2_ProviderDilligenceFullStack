@@ -18,31 +18,62 @@ namespace BackEnd_Proveedores.Repository.Implementations
             _mapper = mapper;
         }
 
-        public Task<SupplierDTO> CreateSupplier(SupplierDTO supplier) 
+        public async Task<SupplierDTO> CreateSupplier(SupplierDTO supplier)
         {
-            throw new NotImplementedException();
+            //Create new supplier
+            Supplier newSupplier = _mapper.Map<Supplier>(supplier);
+            await _dbContext.Suppliers.AddAsync(newSupplier);
+            await _dbContext.SaveChangesAsync();
+            return _mapper.Map<SupplierDTO>(newSupplier);
+
         }
 
-        public Task<bool> DeleteSupplier()
+        public async Task<bool> DeleteSupplier(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Supplier supplier = await _dbContext.Suppliers.FindAsync(id);
+                if (supplier == null) return false;
+                _dbContext.Suppliers.Remove(supplier);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            } catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<List<SupplierDTO>> GetAllSuppliers() //Get All Suppliers
         {
             List<Supplier> suppliers = await _dbContext.Suppliers.ToListAsync(); //Get all suppliers from BD
             return _mapper.Map<List<SupplierDTO>>(suppliers);
-            
+
         }
 
-        public Task<SupplierDTO> GetSupplierByID(int id)
+        public async Task<SupplierDTO> GetSupplierByID(int id)
         {
-            throw new NotImplementedException();
+            Supplier supplier = await _dbContext.Suppliers.FindAsync(id);
+            if (supplier == null)  return null; 
+            else return _mapper.Map<SupplierDTO>(supplier);
         }
 
-        public Task<SupplierDTO> UpdateSupplier(int id, SupplierDTO supplier)
+        public async Task<SupplierDTO> UpdateSupplier(int id, SupplierDTO supplier)
         {
-            throw new NotImplementedException();
+            Supplier newSupplier = _mapper.Map<Supplier>(supplier);
+            _dbContext.Suppliers.Update(newSupplier);
+            await _dbContext.SaveChangesAsync();
+            return _mapper.Map<SupplierDTO>(newSupplier);
+        }
+
+        public async Task<bool> DoesSupplierExistName(string name)
+        {
+            //Check if supplier with same legal name already exists
+            return await _dbContext.Suppliers.AnyAsync(s => s.CompanyName == name);
+        }
+        public async Task<bool> DoesSupplierExistId(int id)
+        {
+            //Check if supplier with same legal name already exists
+            return await _dbContext.Suppliers.AnyAsync(s => s.Id == id);
         }
     }
 }

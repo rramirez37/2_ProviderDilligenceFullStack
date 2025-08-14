@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackEnd_Proveedores.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstSupplierMigration : Migration
+    public partial class InitialSupplierMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

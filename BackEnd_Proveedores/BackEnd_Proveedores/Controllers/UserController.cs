@@ -55,6 +55,7 @@ namespace BackEnd_Proveedores.Controllers
                 _apiResponse.Result = 2;
                 return BadRequest(_apiResponse);
             }
+            _apiResponse.Success = true;
             _apiResponse.Result = user;
             _apiResponse.Message = "User correctly logged in";
             return Ok(_apiResponse);

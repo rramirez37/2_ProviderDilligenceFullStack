@@ -7,9 +7,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { getAllSuppliers } from '../api/supplierApi';
+import { createSupplier, deleteSupplier, getAllSuppliers } from '../api/supplierApi';
 import OptionsButtons from './optionsButtons';
 import Button from '@mui/material/Button';
+import EditDialog from './editDialog';
+import { getCountries } from '../api/countryApi';
 
 const columns = [
     { id: 'companyName', label: 'Company Name', minWidth: 100 },
@@ -25,14 +27,17 @@ const columns = [
     { id: 'options', label: 'Options', minWidth: 100 },
 ];
 
-export default function SupplierTable({ token }) {
+export default function SupplierTable({ countryList,setCountryList, token, setDeleteDialogItems, setEditDialogItems }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [supplierData, setSupplierData] = useState([]);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedSupplier, setSelectedSupplier] = useState({});
 
-    const formatData = async (data) => {
+    const formatData = async (data,countries) => {
         const newData = data.map(row => {
             return {
+                id: row.id,
                 companyName: row.companyName,
                 commercialName: row.commercialName,
                 taxIdentifier: row.taxIdentifier,
@@ -40,7 +45,8 @@ export default function SupplierTable({ token }) {
                 email: row.email,
                 website: row.website,
                 address: row.address,
-                country: row.countryId,
+                country: countries.find(ctr => ctr.id == row.countryId).name,
+                countryId: row.countryId,
                 annualBilling: row.annualBilling,
                 lastEditedDateTime: row.lastEditedDateTime
             }
@@ -49,24 +55,40 @@ export default function SupplierTable({ token }) {
     }
 
     const getDataFromTable = async () => {
-        let data = await getAllSuppliers(token);
-        let newData = await formatData(data)
+        let countries = await getCountries(token)
+        await setCountryList(countries)
+        let data = await getAllSuppliers(token)
+        let newData = await formatData(data,countries)
         setSupplierData(newData)
-        console.log(data);
+        console.log(data)
+    }
+
+    const deleteItem = async (id, token) => {
+        let response = await deleteSupplier(id, token);
+        if (!response) console.log("Could not delete")
+        else console.log("Item deleted")
     }
 
     useEffect(() => {
         getDataFromTable();
     }, [])
 
+    useEffect(() => {
+        console.log(selectedSupplier)
+    }, [selectedSupplier])
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
+        setRowsPerPage(event.target.value);
         setPage(0);
     };
+
+    const changeDialog =  () => {
+        setIsDialogOpen(!isDialogOpen);
+    }
 
     return (
         <>
@@ -97,7 +119,15 @@ export default function SupplierTable({ token }) {
                                                 const lastColumn = index === columns.length - 1;
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        {lastColumn ? (<OptionsButtons></OptionsButtons>) : (column.format && typeof value === 'number'
+                                                        {lastColumn ? (<OptionsButtons
+                                                        token={token}
+                                                        assignedRow={row}
+                                                        setSelectedSupplier={setSelectedSupplier}
+                                                        setDeleteDialogItems={setDeleteDialogItems}
+                                                        setEditDialogItems={setEditDialogItems}
+                                                        deleteItem={deleteItem}
+                                                        reloadTable={getDataFromTable}
+                                                        ></OptionsButtons>) : (column.format && typeof value === 'number'
                                                             ? column.format(value)
                                                             : value)}
                                                     </TableCell>
@@ -119,9 +149,10 @@ export default function SupplierTable({ token }) {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <Button>
+            <Button onClick={changeDialog}>
                     Register New Supplier
                 </Button>
+            
         </>
 
     );

@@ -154,12 +154,12 @@ namespace BackEnd_Proveedores.Controllers
                 bool wasSupplierDeleted = await _supplierRepository.DeleteSupplier(id); 
                 if (wasSupplierDeleted)
                 {
-                    _apiResponse.Result = true;
+                    _apiResponse.Success = true;
                     _apiResponse.Message = "Supplier successfully deleted";
                     return Ok(_apiResponse);
                 } else
                 {
-                    _apiResponse.Result = false;
+                    _apiResponse.Success = false;
                     _apiResponse.Message = "Supplier not found";
                     return Ok(_apiResponse);
                 }

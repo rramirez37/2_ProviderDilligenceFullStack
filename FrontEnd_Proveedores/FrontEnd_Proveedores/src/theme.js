@@ -23,7 +23,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           fontWeight: "bold",
-          marginTop: "16px"
+          marginTop: "16px",
         },
       },
     },
@@ -39,6 +39,24 @@ export const theme = createTheme({
         root: {
           backgroundColor: "#1A1A1A",
           color: "#FFFFFF",
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        head: {
+          backgroundColor: "#1A1A1A",
+          color: "#FFFFFF",
+          fontWeight: "bold",
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          "&:hover": {
+            color: "primary.main",
+          },
         },
       },
     },

@@ -62,8 +62,11 @@ export function LoginForm({ setIsLogged, setToken }) {
                         boxShadow: 4,
                     }}
                 >
-                    <Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                         Welcome to the Supplier System
+                    </Typography>
+                    <Typography variant="h9" sx={{ fontWeight: 'bold' }}>
+                        Log In
                     </Typography>
                         <TextField
                             required

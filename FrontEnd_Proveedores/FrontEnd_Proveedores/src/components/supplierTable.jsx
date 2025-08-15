@@ -13,20 +13,28 @@ import Button from '@mui/material/Button';
 import EditDialog from './editDialog';
 import { getCountries } from '../api/countryApi';
 import { formatInTimeZone } from 'date-fns-tz';
-import { Grid, Link, Typography } from '@mui/material';
+import { Box, Grid, Link, Typography } from '@mui/material';
 
 const columns = [
-    { id: 'companyName', label: 'Company Name', minWidth: 100 },
-    { id: 'commercialName', label: 'Commercial Name', minWidth: 100 },
-    { id: 'taxIdentifier', label: 'Tax Identifier', minWidth: 100 },
-    { id: 'phoneNumber', label: 'Phone Number', minWidth: 100 },
-    { id: 'email', label: 'Email', minWidth: 100 },
-    { id: 'website', label: 'Website', minWidth: 100 },
-    { id: 'address', label: 'Address', minWidth: 100 },
-    { id: 'country', label: 'Country', minWidth: 100 },
-    { id: 'annualBilling', label: 'Annual Billing ($)', minWidth: 100 },
-    { id: 'lastEditedDateTime', label: 'Last Edited', minWidth: 100 },
-    { id: 'options', label: 'Options', minWidth: 100 },
+    { id: 'companyName', label: 'Company Name', minWidth: 100, align: 'center' },
+    { id: 'commercialName', label: 'Commercial Name', minWidth: 100, align: 'center' },
+    { id: 'taxIdentifier', label: 'Tax Identifier', minWidth: 100, align: 'right' },
+    { id: 'phoneNumber', label: 'Phone Number', minWidth: 100, align: 'right' },
+    { id: 'email', label: 'Email', minWidth: 100, align: 'center' },
+    { id: 'website', label: 'Website', minWidth: 100, align: 'center' },
+    { id: 'address', label: 'Address', minWidth: 100, align: 'center' },
+    { id: 'country', label: 'Country', minWidth: 100, align: 'center' },
+    {
+        id: 'annualBilling', label: 'Annual Billing ($)', minWidth: 100, align: 'right', format: (value) => {
+            const number = Number(value);
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            }).format(number);
+        },
+    },
+    { id: 'lastEditedDateTime', label: 'Last Edited', minWidth: 100, align: 'right' },
+    { id: 'options', label: 'Options', minWidth: 100, align: 'center' },
 ];
 
 export default function SupplierTable({ setReload, countryList, setCountryList, token, setDeleteDialogItems, setEditDialogItems, setCreateDialogOpen, setScreeningDialogItems, timezone }) {
@@ -112,14 +120,20 @@ export default function SupplierTable({ setReload, countryList, setCountryList, 
     return (
         <>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <Grid>
-                    <Typography>
-                        SUPPLIER INFORMATION
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    p: 2,
+                    borderBottom: '1px solid #E0E0E0'
+                }}>
+                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                        Supplier Information
                     </Typography>
-                    <Button onClick={onCreateClick}>
+                    <Button variant="contained" color="primary" onClick={onCreateClick}>
                         Register New Supplier
                     </Button>
-                </Grid>
+                </Box>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>

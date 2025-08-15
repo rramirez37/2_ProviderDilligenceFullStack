@@ -42,14 +42,12 @@ export default function DeleteDialog({dialogItems,setDeleteDialogItems}) {
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle>
           {"Supplier deletion confirmation"}
         </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+        <DialogContent sx={{ mt: 3 }}>
+          <DialogContentText>
             Delete {dialogItems ? dialogItems.data.companyName : ''} ?
           </DialogContentText>
         </DialogContent>

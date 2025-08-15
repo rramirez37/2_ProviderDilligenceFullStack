@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, CircularProgress, Dialog, DialogTitle, FormControlLabel, FormGroup, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, Dialog, DialogTitle, FormControlLabel, FormGroup, IconButton, Stack, Typography, DialogContent } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import getWebscrapping from "../api/wscApi";
 import ScreeningResults from "./screeningResults";
@@ -33,6 +33,8 @@ export default function ScreeningDialog({ screeningDialogItems, setScreeningDial
         setFailureText("")
         setValidResults(false)
         setStep(1)
+        setDoOFAC(false)
+        setDoWBL(false)
     }
 
 
@@ -72,25 +74,31 @@ export default function ScreeningDialog({ screeningDialogItems, setScreeningDial
         <Fragment>
             <Dialog open={screeningDialogItems ? screeningDialogItems.state : false}>
                 <DialogTitle direction={"row"} sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                        }}>
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
                     Supplier Screening
-                    <IconButton disabled={isLoading} sx={{ color: '#FFFFFF' }}><CloseIcon onClick={handleClose} ></CloseIcon></IconButton>
+                    {isLoading ? <></> : <IconButton disabled={isLoading} sx={{ color: '#FFFFFF' }}><CloseIcon onClick={handleClose} ></CloseIcon></IconButton>}
                 </DialogTitle>
                 {step == 1 ?
                     <Fragment>
-                        {isLoading ? <CircularProgress></CircularProgress> : <Box>
+                        {isLoading ? <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            minHeight: '200px' 
+                        }}>
+                            <CircularProgress />
+                        </Box> : <DialogContent>
+                            <Typography sx={{ mb: 2, mt: 2 }}>Select appropiate sources to screen {screeningDialogItems?.name}</Typography>
                             <FormGroup>
-                                <Typography >Select appropiate sources to screen {screeningDialogItems?.name}</Typography>
                                 <FormControlLabel control={<Checkbox onChange={handleWBLChange} />} label="WORLD BANK LISTING"></FormControlLabel>
                                 <FormControlLabel control={<Checkbox onChange={handleOFACChange} />} label="OFFICE OF FOREIGN ASSETS CONTROL"></FormControlLabel>
-
                             </FormGroup>
                             <Button onClick={executeScreening} variant="contained"
                                 margin="normal">SEARCH</Button>
-                        </Box>}
+                        </DialogContent>}
                     </Fragment>
                     : <ScreeningResults screenResults={screenResults} failureText={failureText} validResults={validResults} doWBL={doWBL} doOFAC={doOFAC}></ScreeningResults>
                 }

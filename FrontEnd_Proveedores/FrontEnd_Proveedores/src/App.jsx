@@ -9,6 +9,8 @@ import EditDialog from './components/editDialog'
 import { getCountries } from './api/countryApi'
 import CreateDialog from './components/createDialog'
 import ScreeningDialog from './components/screeningDialog'
+import { ThemeProvider } from '@emotion/react'
+import { theme } from './theme'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -38,7 +40,7 @@ function App() {
   }, [countryList])
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       {isLogged ?
         (<Fragment>
           <SupplierTable setReload={setReload} countryList={countryList} setCountryList={setCountryList} token={token} setDeleteDialogItems={setDeleteDialogItems} setEditDialogItems={setEditDialogItems} setCreateDialogOpen={setCreateDialogOpen} setScreeningDialogItems={setScreeningDialogItems} timezone={timezone}></SupplierTable>
@@ -50,7 +52,7 @@ function App() {
         ) :
         (<LoginForm setIsLogged={setIsLogged} setToken={setToken}></LoginForm>)
       }
-    </>
+    </ThemeProvider>
   )
 }
 

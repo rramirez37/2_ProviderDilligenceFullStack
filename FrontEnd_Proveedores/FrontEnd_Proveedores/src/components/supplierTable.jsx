@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import EditDialog from './editDialog';
 import { getCountries } from '../api/countryApi';
 import { formatInTimeZone } from 'date-fns-tz';
-import { Link } from '@mui/material';
+import { Grid, Link, Typography } from '@mui/material';
 
 const columns = [
     { id: 'companyName', label: 'Company Name', minWidth: 100 },
@@ -29,7 +29,7 @@ const columns = [
     { id: 'options', label: 'Options', minWidth: 100 },
 ];
 
-export default function SupplierTable({ setReload, countryList, setCountryList, token, setDeleteDialogItems, setEditDialogItems, setCreateDialogOpen,setScreeningDialogItems,timezone }) {
+export default function SupplierTable({ setReload, countryList, setCountryList, token, setDeleteDialogItems, setEditDialogItems, setCreateDialogOpen, setScreeningDialogItems, timezone }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [supplierData, setSupplierData] = useState([]);
@@ -51,13 +51,14 @@ export default function SupplierTable({ setReload, countryList, setCountryList, 
                 country: countries.find(ctr => ctr.id == row.countryId).name,
                 countryId: row.countryId,
                 annualBilling: row.annualBilling,
-                lastEditedDateTime: formatInTimeZone(row.lastEditedDateTime,timezone,'yyyy-MM-dd HH:mm:ss')
+                lastEditedDateTime: formatInTimeZone(row.lastEditedDateTime, timezone, 'yyyy-MM-dd HH:mm:ss')
             }
         })
         //console.log(newData.sort((a,b) => {return Date(a.lastEditedDateTime) - Date(b.lastEditedDateTime)}))
-        let sortedData = newData.sort((a,b) => {
+        let sortedData = newData.sort((a, b) => {
             console.log(Date(b.lastEditedDateTime) - Date(a.lastEditedDateTime))
-            return b.lastEditedDateTime.localeCompare(a.lastEditedDateTime)})
+            return b.lastEditedDateTime.localeCompare(a.lastEditedDateTime)
+        })
         console.log(sortedData)
         return sortedData
     }
@@ -93,7 +94,7 @@ export default function SupplierTable({ setReload, countryList, setCountryList, 
 
     useEffect(() => {
         console.log(supplierData)
-    },[supplierData])
+    }, [supplierData])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -111,6 +112,14 @@ export default function SupplierTable({ setReload, countryList, setCountryList, 
     return (
         <>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                <Grid>
+                    <Typography>
+                        SUPPLIER INFORMATION
+                    </Typography>
+                    <Button onClick={onCreateClick}>
+                        Register New Supplier
+                    </Button>
+                </Grid>
                 <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
@@ -138,32 +147,32 @@ export default function SupplierTable({ setReload, countryList, setCountryList, 
                                                 const isLink = column.id == 'website'
                                                 return (
                                                     isLink ?
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <Link
-                                                            href={"http://" + value}
-                                                            target="_blank" 
-                                                            rel="noopener noreferrer"
-                                                        >
-                                                            {value}
-                                                        </Link>
-                                                    </TableCell> :
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {lastColumn ? (<OptionsButtons
-                                                            token={token}
-                                                            assignedRow={row}
-                                                            setSelectedSupplier={setSelectedSupplier}
-                                                            setDeleteDialogItems={setDeleteDialogItems}
-                                                            setEditDialogItems={setEditDialogItems}
-                                                            setScreeningDialogItems={setScreeningDialogItems}
-                                                            deleteItem={deleteItem}
-                                                            reloadTable={getDataFromTable}
-                                                        ></OptionsButtons>) : (
-                                                            value instanceof Date ?
-                                                            formatInTimeZone(value,timezone,'yyyy-MM-dd HH:mm:ss')
-                                                            :column.format && typeof value === 'number'
-                                                            ? column.format(value)
-                                                            : value)}
-                                                    </TableCell>
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            <Link
+                                                                href={"http://" + value}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                {value}
+                                                            </Link>
+                                                        </TableCell> :
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {lastColumn ? (<OptionsButtons
+                                                                token={token}
+                                                                assignedRow={row}
+                                                                setSelectedSupplier={setSelectedSupplier}
+                                                                setDeleteDialogItems={setDeleteDialogItems}
+                                                                setEditDialogItems={setEditDialogItems}
+                                                                setScreeningDialogItems={setScreeningDialogItems}
+                                                                deleteItem={deleteItem}
+                                                                reloadTable={getDataFromTable}
+                                                            ></OptionsButtons>) : (
+                                                                value instanceof Date ?
+                                                                    formatInTimeZone(value, timezone, 'yyyy-MM-dd HH:mm:ss')
+                                                                    : column.format && typeof value === 'number'
+                                                                        ? column.format(value)
+                                                                        : value)}
+                                                        </TableCell>
                                                 );
                                             })}
                                         </TableRow>
@@ -182,9 +191,6 @@ export default function SupplierTable({ setReload, countryList, setCountryList, 
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <Button onClick={onCreateClick}>
-                Register New Supplier
-            </Button>
 
         </>
 

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, CircularProgress, Dialog, FormControlLabel, FormGroup, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, Dialog, DialogTitle, FormControlLabel, FormGroup, IconButton, Stack, Typography } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import getWebscrapping from "../api/wscApi";
 import ScreeningResults from "./screeningResults";
@@ -71,15 +71,19 @@ export default function ScreeningDialog({ screeningDialogItems, setScreeningDial
     return (
         <Fragment>
             <Dialog open={screeningDialogItems ? screeningDialogItems.state : false}>
-                <Stack direction={"row"}>
-                    <Typography variant="h4">SUPPLIER SCREENING</Typography>
-                    <IconButton disabled={isLoading}><CloseIcon onClick={handleClose} ></CloseIcon></IconButton>
-                </Stack>
+                <DialogTitle direction={"row"} sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                    Supplier Screening
+                    <IconButton disabled={isLoading} sx={{ color: '#FFFFFF' }}><CloseIcon onClick={handleClose} ></CloseIcon></IconButton>
+                </DialogTitle>
                 {step == 1 ?
                     <Fragment>
                         {isLoading ? <CircularProgress></CircularProgress> : <Box>
                             <FormGroup>
-                                <Typography variant="h5">Select appropiate sources to screen {screeningDialogItems?.name}</Typography>
+                                <Typography >Select appropiate sources to screen {screeningDialogItems?.name}</Typography>
                                 <FormControlLabel control={<Checkbox onChange={handleWBLChange} />} label="WORLD BANK LISTING"></FormControlLabel>
                                 <FormControlLabel control={<Checkbox onChange={handleOFACChange} />} label="OFFICE OF FOREIGN ASSETS CONTROL"></FormControlLabel>
 

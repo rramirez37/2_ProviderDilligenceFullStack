@@ -1,18 +1,18 @@
 import { Fragment, useEffect, useState } from "react";
-import { TextField, Button, Box, Paper, Typography, Dialog, Select, MenuItem, Menu, IconButton, Stack, FormControl } from '@mui/material';
+import { TextField, Button, Box, Paper, Typography, Dialog, Select, MenuItem, Menu, IconButton, Stack, FormControl, DialogTitle, Grid } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 let emptyErrors = {
-        companyName: '',
-        commercialName: '',
-        taxIdentifier: '',
-        phoneNumber: '',
-        email: '',
-        website: '',
-        address: '',
-        countryId: '',
-        annualBilling: ''
-    }
+    companyName: '',
+    commercialName: '',
+    taxIdentifier: '',
+    phoneNumber: '',
+    email: '',
+    website: '',
+    address: '',
+    countryId: '',
+    annualBilling: ''
+}
 
 export default function DataDialog({ type, isOpen, editSupplier, onClickSpecificOperation, countryList, handleClose }) {
 
@@ -26,7 +26,7 @@ export default function DataDialog({ type, isOpen, editSupplier, onClickSpecific
 
     useEffect(() => {
 
-    },[isOpen])
+    }, [isOpen])
 
     const dataValidation = () => {
 
@@ -130,134 +130,157 @@ export default function DataDialog({ type, isOpen, editSupplier, onClickSpecific
     }
 
     return (<Fragment>
-        <Dialog open={isOpen}>
-            <Box display={true} >
+        <Dialog open={isOpen} fullWidth={true} maxWidth='md'>
                 <Paper>
                     <Fragment>
-                        <Typography>Create new supplier</Typography>
-                        <IconButton><CloseIcon onClick={handleClose}></CloseIcon></IconButton>
+                        <DialogTitle sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}
+                        >
+                            {type == 'edit' ? "Edit Supplier": "Create New Supplier"}
+                            <IconButton><CloseIcon onClick={handleClose} sx={{ color: '#FFFFFF' }}></CloseIcon></IconButton>
+                        </DialogTitle>
+
                     </Fragment>
-                    <Box sx={{ width: '100%' }}>
-                        <Stack direction="row" spacing={2}>
-                            <TextField
-                                label="Company Name"
-                                variant="standard"
-                                name="companyName"
-                                value={currentSupplier?.companyName}
-                                onChange={handleSupplierChange}
-                                error={!!errors.companyName}
-                                helperText={errors.companyName}
-                            >
-                            </TextField>
-                            <TextField
-                                label="Commercial Name"
-                                variant="standard"
-                                name="commercialName"
-                                value={currentSupplier?.commercialName}
-                                onChange={handleSupplierChange}
-                                error={!!errors.commercialName}
-                                helperText={errors.commercialName}
-                            >
-                            </TextField>
-                            <TextField
-                                label="Tax Identifier"
-                                variant="standard"
-                                name="taxIdentifier"
-                                value={currentSupplier?.taxIdentifier}
-                                onChange={handleSupplierChange}
-                                error={!!errors.taxIdentifier}
-                                helperText={errors.taxIdentifier}
-                            >
-                            </TextField>
-                        </Stack>
+                    <Box sx={{ p: 3 }} alignContent={'center'}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} md={4}>
+                                <TextField
+                                    label="Company Name"
+                                    name="companyName"
+                                    value={currentSupplier?.companyName}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.companyName}
+                                    helperText={errors.companyName}
+                                    fullWidth
+                                >
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <TextField
+                                    label="Commercial Name"
+                                    name="commercialName"
+                                    value={currentSupplier?.commercialName}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.commercialName}
+                                    helperText={errors.commercialName}
+                                    fullWidth
+                                >
 
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <TextField
+                                    label="Tax Identifier"
+                                    name="taxIdentifier"
+                                    value={currentSupplier?.taxIdentifier}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.taxIdentifier}
+                                    helperText={errors.taxIdentifier}
+                                    fullWidth
+                                >
+                                </TextField>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={3} sx={{ mt: 2 }}>
+                            <Grid item xs={12} md={4}>
+                                <TextField
+                                    label="Phone Number"
+                                    name="phoneNumber"
+                                    value={currentSupplier.phoneNumber}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.phoneNumber}
+                                    helperText={errors.phoneNumber}
+                                    fullWidth
+                                    
+                                >
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <TextField
+                                    label="Email"
+                                    name="email"
+                                    value={currentSupplier.email}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.email}
+                                    helperText={errors.email}
+                                    fullWidth
+                                >
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <TextField
+                                    label="Website"
+                                    name="website"
+                                    value={currentSupplier.website}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.website}
+                                    helperText={errors.website}
+                                    fullWidth
+                                >
+                                </TextField>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={3} sx={{ mt: 2 }}>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    label="Address"
+                                    name="address"
+                                    value={currentSupplier.address}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.address}
+                                    helperText={errors.address}
+                                    fullWidth
+                                    sx={{ height: '100%' }}
+                                >
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} md={3}>
+                                <TextField
+                                    select
+                                    name='countryId'
+                                    value={currentSupplier.countryId}
+                                    label={"Select a country"}
+                                    onChange={handleSupplierChange}
+                                    defaultValue={''}
+                                    error={!!errors.countryId}
+                                    helperText={errors.countryId}
+                                    fullWidth
+                                    sx={{ height: '100%' }}
+                                >
+                                    <MenuItem value=''>
+                                        None
+                                    </MenuItem>
+                                    {countryList.map(ctr => {
+                                        return (<MenuItem key={ctr.id} value={ctr.id} >
+                                            {ctr.name}
+                                        </MenuItem>)
+                                    })}
+
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} md={3}>
+                                <TextField
+                                    label="Annual Billing ($)"
+                                    name="annualBilling"
+                                    value={currentSupplier.annualBilling}
+                                    onChange={handleSupplierChange}
+                                    error={!!errors.annualBilling}
+                                    helperText={errors.annualBilling}
+                                    fullWidth
+                                >
+                                </TextField>
+                            </Grid>
+                        </Grid>
+                        <Button onClick={OnClickOperation} variant="contained" 
+                        >{type == 'edit' ? "SAVE CHANGES" : "CREATE SUPPLIER"}</Button>
                     </Box>
-                    <Box>
-                        <Stack direction="row" spacing={2}>
-                            <TextField
-                                label="Phone Number"
-                                variant="standard"
-                                name="phoneNumber"
-                                value={currentSupplier.phoneNumber}
-                                onChange={handleSupplierChange}
-                                error={!!errors.phoneNumber}
-                                helperText={errors.phoneNumber}
-                            >
-                            </TextField>
-                            <TextField
-                                label="Email"
-                                variant="standard"
-                                name="email"
-                                value={currentSupplier.email}
-                                onChange={handleSupplierChange}
-                                error={!!errors.email}
-                                helperText={errors.email}
-                            >
-                            </TextField>
-                            <TextField
-                                label="Website"
-                                variant="standard"
-                                name="website"
-                                value={currentSupplier.website}
-                                onChange={handleSupplierChange}
-                                error={!!errors.website}
-                                helperText={errors.website}
-                            >
-                            </TextField>
-                        </Stack>
-                    </Box>
-                    <FormControl fullWidth direction="row">
-                        <Stack direction="row" spacing={2} sx={{ flex: 1 }}>
-                            <TextField
-                                label="Address"
-                                variant="standard"
-                                name="address"
-                                value={currentSupplier.address}
-                                onChange={handleSupplierChange}
-                                error={!!errors.address}
-                                helperText={errors.address}
-                            >
-                            </TextField>
-                            <TextField
-                                select
-                                name='countryId'
-                                value={currentSupplier.countryId}
-                                label={"Select a country"}
-                                onChange={handleSupplierChange}
-                                defaultValue={''}
-                                error={!!errors.countryId}
-                                helperText={errors.countryId}
-                            >
-                                <MenuItem value=''>
-                                    None
-                                </MenuItem>
-                                {countryList.map(ctr => {
-                                    return (<MenuItem key={ctr.id} value={ctr.id} >
-                                        {ctr.name}
-                                    </MenuItem>)
-                                })}
-
-                            </TextField>
-                            <TextField
-                                label="Annual Billing ($)"
-                                variant="standard"
-                                name="annualBilling"
-                                value={currentSupplier.annualBilling}
-                                onChange={handleSupplierChange}
-                                error={!!errors.annualBilling}
-                                helperText={errors.annualBilling}
-                            >
-                            </TextField>
-                        </Stack>
-                    </FormControl>
-
-
-                    <Button onClick={OnClickOperation}>{type == 'edit' ? "SAVE CHANGES" : "CREATE SUPPLIER"}</Button>
-
                 </Paper>
-            </Box>
-        </Dialog>
-    </Fragment>)
+        </Dialog >
+    </Fragment >)
 
 
 }

@@ -12,6 +12,8 @@ import OptionsButtons from './optionsButtons';
 import Button from '@mui/material/Button';
 import EditDialog from './editDialog';
 import { getCountries } from '../api/countryApi';
+import { formatInTimeZone } from 'date-fns-tz';
+import { Link } from '@mui/material';
 
 const columns = [
     { id: 'companyName', label: 'Company Name', minWidth: 100 },
@@ -27,14 +29,15 @@ const columns = [
     { id: 'options', label: 'Options', minWidth: 100 },
 ];
 
-export default function SupplierTable({ countryList,setCountryList, token, setDeleteDialogItems, setEditDialogItems }) {
+export default function SupplierTable({ setReload, countryList, setCountryList, token, setDeleteDialogItems, setEditDialogItems, setCreateDialogOpen,timezone }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [supplierData, setSupplierData] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedSupplier, setSelectedSupplier] = useState({});
 
-    const formatData = async (data,countries) => {
+    const formatData = async (data, countries) => {
+        console.log(data)
         const newData = data.map(row => {
             return {
                 id: row.id,
@@ -48,17 +51,22 @@ export default function SupplierTable({ countryList,setCountryList, token, setDe
                 country: countries.find(ctr => ctr.id == row.countryId).name,
                 countryId: row.countryId,
                 annualBilling: row.annualBilling,
-                lastEditedDateTime: row.lastEditedDateTime
+                lastEditedDateTime: formatInTimeZone(row.lastEditedDateTime,timezone,'yyyy-MM-dd HH:mm:ss')
             }
         })
-        return newData;
+        //console.log(newData.sort((a,b) => {return Date(a.lastEditedDateTime) - Date(b.lastEditedDateTime)}))
+        let sortedData = newData.sort((a,b) => {
+            console.log(Date(b.lastEditedDateTime) - Date(a.lastEditedDateTime))
+            return b.lastEditedDateTime.localeCompare(a.lastEditedDateTime)})
+        console.log(sortedData)
+        return sortedData
     }
 
     const getDataFromTable = async () => {
         let countries = await getCountries(token)
         await setCountryList(countries)
         let data = await getAllSuppliers(token)
-        let newData = await formatData(data,countries)
+        let newData = await formatData(data, countries)
         setSupplierData(newData)
         console.log(data)
     }
@@ -71,11 +79,21 @@ export default function SupplierTable({ countryList,setCountryList, token, setDe
 
     useEffect(() => {
         getDataFromTable();
+        setReload(
+            {
+                actions: async () => {
+                    getDataFromTable()
+                },
+            })
     }, [])
 
     useEffect(() => {
         console.log(selectedSupplier)
     }, [selectedSupplier])
+
+    useEffect(() => {
+        console.log(supplierData)
+    },[supplierData])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -86,8 +104,8 @@ export default function SupplierTable({ countryList,setCountryList, token, setDe
         setPage(0);
     };
 
-    const changeDialog =  () => {
-        setIsDialogOpen(!isDialogOpen);
+    const onCreateClick = () => {
+        setCreateDialogOpen(true)
     }
 
     return (
@@ -117,17 +135,31 @@ export default function SupplierTable({ countryList,setCountryList, token, setDe
                                             {columns.map((column, index) => {
                                                 const value = row[column.id];
                                                 const lastColumn = index === columns.length - 1;
+                                                const isLink = column.id == 'website'
                                                 return (
+                                                    isLink ?
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        <Link
+                                                            href={"http://" + value}
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            {value}
+                                                        </Link>
+                                                    </TableCell> :
                                                     <TableCell key={column.id} align={column.align}>
                                                         {lastColumn ? (<OptionsButtons
-                                                        token={token}
-                                                        assignedRow={row}
-                                                        setSelectedSupplier={setSelectedSupplier}
-                                                        setDeleteDialogItems={setDeleteDialogItems}
-                                                        setEditDialogItems={setEditDialogItems}
-                                                        deleteItem={deleteItem}
-                                                        reloadTable={getDataFromTable}
-                                                        ></OptionsButtons>) : (column.format && typeof value === 'number'
+                                                            token={token}
+                                                            assignedRow={row}
+                                                            setSelectedSupplier={setSelectedSupplier}
+                                                            setDeleteDialogItems={setDeleteDialogItems}
+                                                            setEditDialogItems={setEditDialogItems}
+                                                            deleteItem={deleteItem}
+                                                            reloadTable={getDataFromTable}
+                                                        ></OptionsButtons>) : (
+                                                            value instanceof Date ?
+                                                            formatInTimeZone(value,timezone,'yyyy-MM-dd HH:mm:ss')
+                                                            :column.format && typeof value === 'number'
                                                             ? column.format(value)
                                                             : value)}
                                                     </TableCell>
@@ -149,10 +181,10 @@ export default function SupplierTable({ countryList,setCountryList, token, setDe
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <Button onClick={changeDialog}>
-                    Register New Supplier
-                </Button>
-            
+            <Button onClick={onCreateClick}>
+                Register New Supplier
+            </Button>
+
         </>
 
     );

@@ -55,7 +55,7 @@ export default function DeleteDialog({dialogItems,setDeleteDialogItems}) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>No</Button>
-          <Button onClick={confirm} autoFocus>
+          <Button onClick={confirm} autoFocus >
             Yes
           </Button>
         </DialogActions>

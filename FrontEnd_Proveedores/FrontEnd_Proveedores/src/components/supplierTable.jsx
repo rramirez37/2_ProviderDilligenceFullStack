@@ -29,7 +29,7 @@ const columns = [
     { id: 'options', label: 'Options', minWidth: 100 },
 ];
 
-export default function SupplierTable({ setReload, countryList, setCountryList, token, setDeleteDialogItems, setEditDialogItems, setCreateDialogOpen,timezone }) {
+export default function SupplierTable({ setReload, countryList, setCountryList, token, setDeleteDialogItems, setEditDialogItems, setCreateDialogOpen,setScreeningDialogItems,timezone }) {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [supplierData, setSupplierData] = useState([]);
@@ -154,6 +154,7 @@ export default function SupplierTable({ setReload, countryList, setCountryList, 
                                                             setSelectedSupplier={setSelectedSupplier}
                                                             setDeleteDialogItems={setDeleteDialogItems}
                                                             setEditDialogItems={setEditDialogItems}
+                                                            setScreeningDialogItems={setScreeningDialogItems}
                                                             deleteItem={deleteItem}
                                                             reloadTable={getDataFromTable}
                                                         ></OptionsButtons>) : (

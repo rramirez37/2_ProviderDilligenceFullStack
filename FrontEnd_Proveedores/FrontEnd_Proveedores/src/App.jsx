@@ -8,6 +8,7 @@ import DeleteDialog from './components/deleteDialog'
 import EditDialog from './components/editDialog'
 import { getCountries } from './api/countryApi'
 import CreateDialog from './components/createDialog'
+import ScreeningDialog from './components/screeningDialog'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +26,10 @@ function App() {
     state: false
   })
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [screeningDialogItems, setScreeningDialogItems] = useState({
+    name: "",
+    state: false
+  })
   const [reload, setReload] = useState({actions: {}})
   const timezone = 'America/Lima'
 
@@ -36,10 +41,11 @@ function App() {
     <>
       {isLogged ?
         (<Fragment>
-          <SupplierTable setReload={setReload} countryList={countryList} setCountryList={setCountryList} token={token} setDeleteDialogItems={setDeleteDialogItems} setEditDialogItems={setEditDialogItems} setCreateDialogOpen={setCreateDialogOpen} timezone={timezone}></SupplierTable>
+          <SupplierTable setReload={setReload} countryList={countryList} setCountryList={setCountryList} token={token} setDeleteDialogItems={setDeleteDialogItems} setEditDialogItems={setEditDialogItems} setCreateDialogOpen={setCreateDialogOpen} setScreeningDialogItems={setScreeningDialogItems} timezone={timezone}></SupplierTable>
           <DeleteDialog dialogItems={deleteDialogItems} setDeleteDialogItems={setDeleteDialogItems}></DeleteDialog>
           <EditDialog dialogItems={editDialogItems} setEditDialogItems={setEditDialogItems} token={token} countryList={countryList}></EditDialog>
           <CreateDialog token={token} countryList={countryList} createDialogOpen={createDialogOpen} setCreateDialogOpen={setCreateDialogOpen} reload={reload}></CreateDialog>
+          <ScreeningDialog screeningDialogItems={screeningDialogItems} setScreeningDialogItems={setScreeningDialogItems}></ScreeningDialog>
         </Fragment>
         ) :
         (<LoginForm setIsLogged={setIsLogged} setToken={setToken}></LoginForm>)

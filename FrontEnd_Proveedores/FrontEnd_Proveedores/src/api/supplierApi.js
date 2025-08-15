@@ -22,9 +22,11 @@ export async function createSupplier(supplier,token) {
         'Authorization': `Bearer ${token}`
       },
     })
+    console.log(data)
     if (!data.success) return {};
     else return data.result;
   } catch (error) {
+    console.log(error)
     return {};
   }
 }
